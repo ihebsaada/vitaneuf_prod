@@ -30,7 +30,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                     <BsFillGrid3X3GapFill className='icon'/> Categories
                 </Link>
             </li>
-            <li className='sidebar-list-item'>
+         {/*   <li className='sidebar-list-item'>
                 <Link to="/customers">
                     <BsPeopleFill className='icon'/> Customers
                 </Link>
@@ -49,7 +49,7 @@ function Sidebar({openSidebarToggle, OpenSidebar}) {
                 <Link to="/settings">
                     <BsFillGearFill className='icon'/> Setting
                 </Link>
-            </li>
+            </li> */}
         </ul>
     </aside>
   )

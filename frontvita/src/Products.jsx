@@ -1,5 +1,6 @@
-import { useState, useEffect } from 'react';
-import { BsFillArchiveFill, BsSearch, BsGrid3X3Gap, BsListUl, BsPlus, BsX } from 'react-icons/bs';
+import { useState, useEffect, useRef } from 'react';
+import { BsFillArchiveFill, BsSearch, BsGrid3X3Gap, BsListUl, BsPlus, BsX, BsUpload } from 'react-icons/bs';
+import './Products.css';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -12,6 +13,9 @@ const Products = () => {
   const [showUpdateModal, setShowUpdateModal] = useState(false);
 const [updateFormData, setUpdateFormData] = useState(null);
 const [updating, setUpdating] = useState(false);
+const [updateSelectedFile, setUpdateSelectedFile] = useState(null);
+const [updatePreviewUrl, setUpdatePreviewUrl] = useState('');
+const updateFileInputRef = useRef(null);
 const [categories, setCategories] = useState(['all']);
 
   const [formData, setFormData] = useState({
@@ -22,6 +26,9 @@ const [categories, setCategories] = useState(['all']);
     available: true,
     details: []
   });
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+  const fileInputRef = useRef(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
@@ -100,24 +107,36 @@ const [categories, setCategories] = useState(['all']);
     try {
       setSubmitting(true);
       
-      // Create a copy of the form data to send to the server
-      const productToAdd = { ...formData };
+      // Create FormData object for file upload
+      const formDataToSend = new FormData();
+      
+      // Add all form fields to FormData
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('description', formData.description);
+      formDataToSend.append('available', formData.available);
       
       // Make sure category is an ID, not a name
-      if (productToAdd.category && typeof productToAdd.category === 'string') {
+      let categoryId = formData.category;
+      if (categoryId && typeof categoryId === 'string') {
         // Find the category object with the matching name
-        const selectedCategory = categories.find(cat => cat._id !== 'all' && cat.name === productToAdd.category);
+        const selectedCategory = categories.find(cat => cat._id !== 'all' && cat.name === categoryId);
         if (selectedCategory) {
-          productToAdd.category = selectedCategory._id; // Use the category ID
+          categoryId = selectedCategory._id; // Use the category ID
         }
+      }
+      formDataToSend.append('category', categoryId);
+      
+      // Add details as JSON string
+      formDataToSend.append('details', JSON.stringify(formData.details));
+      
+      // Add image file if selected
+      if (selectedFile) {
+        formDataToSend.append('image', selectedFile);
       }
       
       const response = await fetch('http://localhost:3000/products/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(productToAdd),
+        body: formDataToSend,
       });
 
       if (!response.ok) {
@@ -157,6 +176,19 @@ const [categories, setCategories] = useState(['all']);
       [name]: type === 'checkbox' ? checked : value
     });
   };
+  
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedFile(file);
+      // Create a preview URL for the selected image
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        setPreviewUrl(fileReader.result);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
 
   const addDetailField = () => {
     setFormData({
@@ -189,6 +221,19 @@ const [categories, setCategories] = useState(['all']);
     }));
   };
   
+  const handleUpdateFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setUpdateSelectedFile(file);
+      // Create a preview URL for the selected image
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        setUpdatePreviewUrl(fileReader.result);
+      };
+      fileReader.readAsDataURL(file);
+    }
+  };
+  
   // For details editing, add similar logic like in add
   const updateUpdateDetailField = (index, field, value) => {
     const updatedDetails = [...updateFormData.details];
@@ -216,22 +261,36 @@ const [categories, setCategories] = useState(['all']);
     try {
       setUpdating(true);
       
-      // Create a copy of the form data to send to the server
-      const productToUpdate = { ...updateFormData };
+      // Create FormData object for file upload
+      const formDataToSend = new FormData();
+      
+      // Add all form fields to FormData
+      formDataToSend.append('name', updateFormData.name);
+      formDataToSend.append('description', updateFormData.description || '');
+      formDataToSend.append('available', updateFormData.available);
       
       // Make sure category is an ID, not a name
-      if (productToUpdate.category && typeof productToUpdate.category === 'string') {
+      let categoryId = updateFormData.category;
+      if (categoryId && typeof categoryId === 'string') {
         // Find the category object with the matching name
-        const selectedCategory = categories.find(cat => cat._id !== 'all' && cat.name === productToUpdate.category);
+        const selectedCategory = categories.find(cat => cat._id !== 'all' && cat.name === categoryId);
         if (selectedCategory) {
-          productToUpdate.category = selectedCategory._id; // Use the category ID
+          categoryId = selectedCategory._id; // Use the category ID
         }
+      }
+      formDataToSend.append('category', categoryId);
+      
+      // Add details as JSON string
+      formDataToSend.append('details', JSON.stringify(updateFormData.details || []));
+      
+      // Add image file if selected
+      if (updateSelectedFile) {
+        formDataToSend.append('image', updateSelectedFile);
       }
       
       const response = await fetch(`http://localhost:3000/products/${updateFormData._id}`, {
-        method: 'PUT', // or PATCH depending on your API
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(productToUpdate),
+        method: 'PUT',
+        body: formDataToSend,
       });
   
       if (!response.ok) {
@@ -520,7 +579,7 @@ const [categories, setCategories] = useState(['all']);
               }}>
                 {product.image ? (
                   <img 
-                    src={product.image} 
+                    src={product.image.startsWith('http') ? product.image : `http://localhost:3000${product.image}`} 
                     alt={product.name}
                     style={{
                       width: '100%',
@@ -783,22 +842,50 @@ const [categories, setCategories] = useState(['all']);
 
             <div style={{ marginBottom: '15px' }}>
               <label style={{ display: 'block', marginBottom: '5px', fontWeight: 'bold', color: '#666' }}>
-                Image URL
+                Product Image
               </label>
-              <input
-                type="text"
-                name="image"
-                value={formData.image}
-                onChange={handleInputChange}
-                style={{
-                  width: '100%',
-                  padding: '10px',
-                  border: '2px solid #e0e0e0',
-                  borderRadius: '8px',
-                  fontSize: '14px',
-                  boxSizing: 'border-box'
-                }}
-              />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#2962ff',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    fontSize: '14px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '5px'
+                  }}
+                >
+                  <BsUpload /> Choose Image
+                </button>
+                <span style={{ fontSize: '14px', color: '#666' }}>
+                  {selectedFile ? selectedFile.name : 'No file chosen'}
+                </span>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                />
+              </div>
+              {previewUrl && (
+                <img 
+                  src={previewUrl} 
+                  alt="Preview" 
+                  style={{
+                    maxWidth: '100%',
+                    maxHeight: '200px',
+                    borderRadius: '8px',
+                    border: '1px solid #e0e0e0'
+                  }}
+                />
+              )}
             </div>
 
             <div style={{ marginBottom: '20px' }}>
@@ -967,14 +1054,64 @@ const [categories, setCategories] = useState(['all']);
         style={inputStyle}
       />
 
-      <input
-        type="text"
-        name="image"
-        value={updateFormData.image || ''}
-        onChange={handleUpdateInputChange}
-        placeholder="Image URL"
-        style={inputStyle}
-      />
+      <div style={{ marginBottom: 15 }}>
+        <label style={{ display: 'block', marginBottom: 5, fontWeight: 'bold', color: '#666' }}>
+          Product Image
+        </label>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+          <button
+            type="button"
+            onClick={() => updateFileInputRef.current?.click()}
+            style={{
+              padding: '8px 16px',
+              background: '#2962ff',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              fontSize: '14px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '5px'
+            }}
+          >
+            <BsUpload /> Choose Image
+          </button>
+          <span style={{ fontSize: '14px', color: '#666' }}>
+            {updateSelectedFile ? updateSelectedFile.name : 'No new file chosen'}
+          </span>
+          <input
+            type="file"
+            ref={updateFileInputRef}
+            onChange={handleUpdateFileChange}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+        </div>
+        {updatePreviewUrl ? (
+          <img 
+            src={updatePreviewUrl} 
+            alt="Preview" 
+            style={{
+              maxWidth: '100%',
+              maxHeight: '200px',
+              borderRadius: '8px',
+              border: '1px solid #e0e0e0'
+            }}
+          />
+        ) : updateFormData.image ? (
+                  <img 
+                    src={updateFormData.image.startsWith('http') ? updateFormData.image : `http://localhost:3000${updateFormData.image}`} 
+                    alt="Current" 
+                    style={{
+                      maxWidth: '100%',
+                      maxHeight: '200px',
+                      borderRadius: '8px',
+                      border: '1px solid #e0e0e0'
+                    }}
+                  />
+        ) : null}
+      </div>
 
       <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer', marginBottom: 20 }}>
         <input

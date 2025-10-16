@@ -4,28 +4,34 @@ import Product from '../models/Product.js';
 // ✅ Create a new product
 export const createProduct = async (req, res) => {
   try {
-    const { name, category, description, details, image, available } = req.body;
+    const { name, category, description, details, available } = req.body;
+    
+    // Parse details if it's sent as a string (from form data)
+    const parsedDetails = typeof details === 'string' ? JSON.parse(details) : details;
 
     // Validate category is a valid ObjectId string
     if (!mongoose.Types.ObjectId.isValid(category)) {
       return res.status(400).json({ message: 'Invalid category ID format' });
     }
 
+    // Get image path from multer if uploaded
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : '';
+
     const product = new Product({
       name,
       category, // store as ObjectId string from frontend
       description,
-      details,   // Should be an array of { key, value }
-      image,
-      available
+      details: parsedDetails,   // Should be an array of { key, value }
+      image: imagePath,
+      available: available === 'true' || available === true
     });
 
-    await product.save();console.log(product)
+    await product.save();
 
     res.status(201).json({ message: 'Product created', product });
   } catch (err) {
     res.status(500).json({ message: 'Product creation failed', error: err.message });
-    console.log(err,product)
+    console.log(err);
   }
 };
 
@@ -55,29 +61,39 @@ export const getProductById = async (req, res) => {
 // ✏️ Update product
 export const updateProduct = async (req, res) => {
   try {
-    const { name, category, description, details, image, available } = req.body;
+    const { name, category, description, details, available } = req.body;
+    
+    // Parse details if it's sent as a string (from form data)
+    const parsedDetails = typeof details === 'string' ? JSON.parse(details) : details;
+    
+    // Validate category is a valid ObjectId string
+    if (category && !mongoose.Types.ObjectId.isValid(category)) {
+      return res.status(400).json({ message: 'Invalid category ID format' });
+    }
 
-    const product = await Product.findById(req.params.id);
+    // Get image path from multer if uploaded
+    const updateData = {
+      name,
+      category,
+      description,
+      details: parsedDetails,
+      available: available === 'true' || available === true
+    };
+
+    // Only update image if a new file was uploaded
+    if (req.file) {
+      updateData.image = `/uploads/${req.file.filename}`;
+    }
+
+    const product = await Product.findByIdAndUpdate(
+      req.params.id, 
+      updateData,
+      { new: true, runValidators: true }
+    ).populate('category');
+
     if (!product) return res.status(404).json({ message: 'Product not found' });
 
-    if (name) product.name = name;
-    if (category) {
-      if (!mongoose.Types.ObjectId.isValid(category)) {
-        return res.status(400).json({ message: 'Invalid category ID format' });
-      }
-      product.category = category;
-    }
-    if (description) product.description = description;
-    if (details) product.details = details;
-    if (image) product.image = image;
-    if (available !== undefined) product.available = available;
-
-    await product.save();
-
-    // Return updated product with populated category
-    const updatedProduct = await Product.findById(product._id).populate('category');
-
-    res.status(200).json({ message: 'Product updated', product: updatedProduct });
+    res.status(200).json({ message: 'Product updated', product });
   } catch (err) {
     res.status(500).json({ message: 'Product update failed', error: err.message });
   }
