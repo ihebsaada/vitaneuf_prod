@@ -1,0 +1,179 @@
+.categories-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 25px;
+  background-color: var(--white);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  align-items: center;
+}
+
+.categories-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+  flex-direction: column;
+}
+
+.categories-logo {
+  width: 180px;
+  margin-bottom: 1rem;
+}
+
+.categories-title {
+  color: var(--primary);
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.categories-subtitle {
+  color: var(--gray);
+  font-size: 16px;
+  margin-top: 0.5rem;
+}
+
+.add-category-form {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+
+.category-input {
+  flex-grow: 1;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: var(--border-radius);
+  border: 1.5px solid var(--light-gray);
+  transition: var(--transition);
+  outline: none;
+}
+
+.category-input:focus {
+  border-color: var(--primary);
+}
+
+.btn-add {
+  background-color: var(--primary);
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 12px 24px;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 114, 188, 0.35);
+  transition: var(--transition);
+}
+
+.btn-add:hover:not(:disabled) {
+  background-color: var(--primary-light);
+  transform: translateY(-2px);
+}
+
+.btn-add:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.categories-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.category-item {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  margin-bottom: 12px;
+  background-color: var(--background);
+  border-radius: var(--border-radius);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: var(--transition);
+}
+
+.category-item:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--hover-shadow);
+}
+
+.category-name {
+  flex-grow: 1;
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.category-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-edit {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-edit:hover {
+  background-color: var(--primary-light);
+}
+
+.btn-delete {
+  background-color: var(--danger);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-delete:hover {
+  opacity: 0.9;
+}
+
+.btn-cancel {
+  background-color: var(--gray);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.btn-cancel:hover {
+  opacity: 0.9;
+}
+
+.edit-input {
+  flex-grow: 1;
+  padding: 10px 14px;
+  font-size: 15px;
+  border-radius: var(--border-radius);
+  border: 1.5px solid var(--light-gray);
+  margin-right: 12px;
+  outline: none;
+  transition: var(--transition);
+}
+
+.edit-input:focus {
+  border-color: var(--primary);
+}
+
+.loading-message, .error-message {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 18px;
+}
+
+.error-message {
+  color: var(--danger);
+}
