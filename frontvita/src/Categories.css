@@ -1,3 +1,14 @@
+.categories-wrapper {
+  display: flex;
+  justify-content: center;      /* center horizontally */
+  align-items: center;          /* center vertically */
+  min-height: 100vh;            /* take full height of viewport */
+
+  padding: 2rem;                /* in case content overflows vertically */
+  box-sizing: border-box;
+}
+
+
 .categories-container {
   max-width: 800px;
   margin: 2rem auto;

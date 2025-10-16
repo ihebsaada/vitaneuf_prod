@@ -384,7 +384,7 @@ const [categories, setCategories] = useState(['all']);
           onClick={() => setShowAddModal(true)}
           style={{
             padding: '12px 24px',
-            background: '#2962ff',
+            background: '#aab5b3ff',
             color: 'white',
             border: 'none',
             borderRadius: '8px',
@@ -404,28 +404,28 @@ const [categories, setCategories] = useState(['all']);
       </div>
 
       <div className="main-cards">
-        <div className="card">
-          <div className="card-inner">
+        <div className="total">
+          <div className="card-inner ">
             <h3>TOTAL</h3>
             <BsFillArchiveFill className='card_icon'/>
           </div>
           <h1>{products.length}</h1>
         </div>
-        <div className="card">
+        <div className="available">
           <div className="card-inner">
             <h3>AVAILABLE</h3>
             <BsFillArchiveFill className='card_icon'/>
           </div>
           <h1>{products.filter(p => p.available).length}</h1>
         </div>
-        <div className="card">
+        <div className="categories">
           <div className="card-inner">
             <h3>CATEGORIES</h3>
             <BsGrid3X3Gap className='card_icon'/>
           </div>
           <h1>{categories.length - 1}</h1>
         </div>
-        <div className="card">
+        <div className="out-of-stock">
           <div className="card-inner">
             <h3>OUT OF STOCK</h3>
             <BsFillArchiveFill className='card_icon'/>
@@ -695,7 +695,7 @@ const [categories, setCategories] = useState(['all']);
         onClick={() => openUpdateModal(product)}
         style={{
           padding: '8px 16px',
-          background: '#2962ff',
+          background: '#58ced0ff',
           color: 'white',
           border: 'none',
           borderRadius: '8px',
@@ -711,7 +711,7 @@ const [categories, setCategories] = useState(['all']);
         onClick={() => handleDeleteProduct(product._id)}
         style={{
           padding: '8px 16px',
-          background: '#f44336',
+          background: '#e0827bff',
           color: 'white',
           border: 'none',
           borderRadius: '8px',

@@ -76,28 +76,28 @@ function Home() {
 
       {!loadingProducts && !error && (
         <div className='main-cards'>
-          <div className='card'>
+          <div className='total'>
             <div className='card-inner'>
               <h3>PRODUCTS</h3>
               <BsFillArchiveFill className='card_icon' />
             </div>
             <h1>{totalProducts}</h1>
           </div>
-          <div className='card'>
+          <div className='categories'>
             <div className='card-inner'>
               <h3>CATEGORIES</h3>
               <BsFillGrid3X3GapFill className='card_icon' />
             </div>
             <h1>{totalCategories}</h1>
           </div>
-          <div className='card'>
+          <div className='available'>
             <div className='card-inner'>
               <h3>AVAILABLE</h3>
               <BsPeopleFill className='card_icon' />
             </div>
             <h1>{totalAvailable}</h1>
           </div>
-          <div className='card'>
+          <div className='out-of-stock'>
             <div className='card-inner'>
               <h3>OUT OF STOCK</h3>
               <BsFillBellFill className='card_icon' />

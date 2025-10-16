@@ -53,3 +53,62 @@
   font-size: 0.9em;
   color: #666;
 }
+
+
+
+.total {
+ /* Card styles */
+  background-color: #a8dafe; /* Light blue */
+  color: #0a0e13;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  /* Optional: mimic card layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.available {
+  background-color: #6eacb9; /* Light blue */
+  color: #0e181b;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  /* Optional: mimic card layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.categories {
+   background-color: #81c591; /* Light blue */
+  color: #08090b;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  /* Optional: mimic card layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.out-of-stock {
+  background-color: #e9ae7b; /* Light blue */
+  color: #0e0c0b;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  
+  /* Optional: mimic card layout */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

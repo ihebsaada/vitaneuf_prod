@@ -104,6 +104,7 @@ const Categories = () => {
   if (error) return <p className="error-message">Error: {error}</p>;
 
   return (
+    <div className='categories-wrapper'>
     <div className="categories-container">
       <div className="categories-header">
         <img src={vitaneufLogo} alt="Vitaneuf Logo" className="categories-logo" />
@@ -180,6 +181,7 @@ const Categories = () => {
           </li>
         ))}
       </ul>
+    </div>
     </div>
   );
 };
