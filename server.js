@@ -43,7 +43,7 @@ app.use('/products', productRoutes);
 app.use('/categories',categoryRoutes);
 
 connectDB().then(() => {
-  app.listen(PORT, () => {
+  app.listen(PORT, '0.0.0.0', () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
   });
 });
