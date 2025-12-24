@@ -3,13 +3,15 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/User.js';
-import productRoutes from './routes/Product.js'
+import productRoutes from './routes/Product.js';
+import EventRoutes from './routes/Event.js';
 import cors from 'cors';
 import categoryRoutes from './routes/Category.js'
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 dotenv.config();
+
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -19,6 +21,11 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+//app.use(cors({
+  //origin: ["http://localhost:4173", "http://localhost:5174"],
+  //credentials: true,
+//}))
+
 app.use(cors());
 
 // Serve uploaded files
@@ -40,9 +47,10 @@ const connectDB = async () => {
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/categories',categoryRoutes);
+app.use('/events',EventRoutes);
 
 connectDB().then(() => {
-  app.listen(PORT, '0.0.0.0', () => {
+  app.listen(PORT, () => {
     console.log(`🚀 Server running at http://localhost:${PORT}`);
   });
 });
