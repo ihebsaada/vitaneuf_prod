@@ -3,7 +3,8 @@ import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import userRoutes from './routes/User.js';
-import productRoutes from './routes/Product.js'
+import productRoutes from './routes/Product.js';
+import EventRoutes from './routes/Event.js';
 import cors from 'cors';
 import categoryRoutes from './routes/Category.js'
 import path from 'path';
@@ -20,6 +21,11 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+//app.use(cors({
+  //origin: ["http://localhost:4173", "http://localhost:5174"],
+  //credentials: true,
+//}))
+
 app.use(cors());
 
 // Serve uploaded files
@@ -41,6 +47,7 @@ const connectDB = async () => {
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
 app.use('/categories',categoryRoutes);
+app.use('/events',EventRoutes);
 
 connectDB().then(() => {
   app.listen(PORT, () => {
